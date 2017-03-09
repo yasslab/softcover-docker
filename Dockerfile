@@ -1,5 +1,3 @@
-# docker run --rm -it -v $(pwd):/app ruby:2.3 bash
-
 FROM ruby:2.3
 MAINTAINER yasslab
 
