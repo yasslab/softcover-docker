@@ -1,6 +1,7 @@
 FROM ruby:2.3
 MAINTAINER yasslab
 
+VOLUME /book
 WORKDIR /book
 
 RUN apt-get update
