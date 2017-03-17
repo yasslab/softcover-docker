@@ -1,6 +1,8 @@
 FROM ruby:2.3
 MAINTAINER yasslab
 
+WORKDIR /book
+
 RUN apt-get update
 
 RUN apt-get install -y texlive-lang-japanese texlive-fonts-recommended
