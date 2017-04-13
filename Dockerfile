@@ -4,10 +4,18 @@ MAINTAINER yasslab
 VOLUME /book
 WORKDIR /book
 
-RUN apt-get update
+RUN mkdir /texlive
+COPY texlive.profile /texlive
 
-RUN apt-get install -y texlive-lang-japanese texlive-fonts-recommended
-RUN apt-get install -y texlive-xetex inkscape zip default-jre fontconfig calibre-bin
+RUN cd /texlive && \
+    wget http://mirror.unl.edu/ctan/systems/texlive/tlnet/install-tl-unx.tar.gz && \
+    tar xvf install-tl-unx.tar.gz && \
+    cd install-tl* && \
+    ./install-tl --profile /texlive/texlive.profile --repository http://mirror.ctan.org/systems/texlive/tlnet/
+RUN /usr/local/texlive/2016/bin/x86_64-linux/tlmgr path add; exit 0
+
+RUN apt-get update
+RUN apt-get install -y inkscape zip default-jre fontconfig calibre-bin
 
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get install -y nodejs
