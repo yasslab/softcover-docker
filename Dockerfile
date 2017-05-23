@@ -22,6 +22,8 @@ RUN apt-get update && apt-get install -y \
     fontconfig \
     calibre-bin \
     nodejs \
+    libopencv-dev \
+    python-opencv \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
