@@ -11,8 +11,7 @@ RUN cd /texlive && \
     wget http://mirror.unl.edu/ctan/systems/texlive/tlnet/install-tl-unx.tar.gz && \
     tar xvf install-tl-unx.tar.gz && \
     cd install-tl* && \
-    ./install-tl --profile /texlive/texlive.profile --repository http://mirror.ctan.org/systems/texlive/tlnet/
-RUN /usr/local/texlive/2016/bin/x86_64-linux/tlmgr path add; exit 0
+    ./install-tl --profile /texlive/texlive.profile --repository http://mirror.ctan.org/systems/texlive/tlnet/ --repository http://ctan.math.utah.edu/ctan/tex-archive/systems/texlive/tlnet/
 
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get update && apt-get install -y \
