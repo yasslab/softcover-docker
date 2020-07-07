@@ -1,19 +1,29 @@
-FROM ruby:2.3
+FROM ruby:2.7.1
 MAINTAINER yasslab
 
-VOLUME /book
-WORKDIR /book
+ENV LANG en_US.UTF-8
 
-RUN apt-get update
+RUN mkdir /src
+WORKDIR /src
 
-RUN apt-get install -y texlive-lang-japanese texlive-fonts-recommended
-RUN apt-get install -y texlive-xetex inkscape zip default-jre fontconfig calibre-bin
+RUN useradd -m --shell /bin/bash --uid 1000 ruby
+RUN chown ruby:ruby /src
 
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
-RUN apt-get install -y nodejs
-RUN curl -sL https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2 | tar -jxf- -C /opt
-RUN mkdir -p /opt/kindlegen && curl -sL http://kindlegen.s3.amazonaws.com/kindlegen_linux_2.6_i386_v2_9.tar.gz | tar -zxf- -C /opt/kindlegen
+RUN apt-get update && \
+  apt-get install -y --no-install-recommends \
+  texlive-full \
+  ttf-mscorefonts-installer \
+  fonts-liberation \
+  fonts-migmix \
+  inkscape \
+  zip \
+  default-jre \
+  epubcheck \
+  calibre \
+  nodejs \
+  imagemagick \
+  phantomjs \
+  libcurl4-gnutls-dev
 
-ENV PATH $PATH:/opt/phantomjs-2.1.1-linux-x86_64/bin:/opt/kindlegen
-
-RUN gem install bundler epubcheck-ruby
+USER ruby
+ENV BUNDLE_PATH vendor/bundle
