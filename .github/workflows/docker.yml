@@ -1,0 +1,47 @@
+name: docker
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - Dockerfile
+      - .github/workflows/docker.yml
+  pull_request:
+    paths:
+      - Dockerfile
+      - .github/workflows/docker.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4.4.0
+        with:
+          fetch-depth: 1
+      # 元のイメージは 7GB を超えるので、使わないツールを消して空きを作る
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup
+          df -h /
+      - uses: docker/login-action@v3.7.0
+        if: ${{ github.ref == 'refs/heads/master' }}
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.12.0
+      # master だけが push する。使う側は digest で固定するので、タグを上書きしても既存のビルドは変わらない
+      - name: Build and push
+        uses: docker/build-push-action@v6.19.2
+        with:
+          context: .
+          push: ${{ github.ref == 'refs/heads/master' }}
+          tags: |
+            ghcr.io/${{ github.repository }}:ruby3.3
+            ghcr.io/${{ github.repository }}:ruby3.3-${{ github.sha }}
