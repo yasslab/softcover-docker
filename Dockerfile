@@ -22,10 +22,11 @@ RUN cd /tmp \
   && mkdir -p /opt/ruby-gems && chown circleci:circleci /opt/ruby-gems \
   && /opt/ruby/bin/ruby -ropenssl -e 'puts OpenSSL::OPENSSL_LIBRARY_VERSION'
 
-# 元の Ruby 2.6 の gem の置き場（/usr/local/bundle）と混ざらないようにする
-ENV PATH=/opt/ruby/bin:$PATH \
+# 元の Ruby 2.6 の gem の置き場（/usr/local/bundle）と混ざらないようにする。
+# BUNDLE_PATH は空にすると bundler が / に入れようとするので、元のイメージと同じく GEM_HOME にそろえる
+ENV PATH=/opt/ruby/bin:/opt/ruby-gems/bin:$PATH \
     GEM_HOME=/opt/ruby-gems \
-    BUNDLE_PATH= \
+    BUNDLE_PATH=/opt/ruby-gems \
     BUNDLE_APP_CONFIG=/opt/ruby-gems/.bundle
 
 # softcover 1.6 系が使う古い C 拡張は、Ruby 3.3 が付ける -Werror=... で組めないので、警告に戻す。
